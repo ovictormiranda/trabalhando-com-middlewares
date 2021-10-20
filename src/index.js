@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
+
 const { v4: uuidv4, validate } = require('uuid');
 
 const app = express();
@@ -10,15 +11,37 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers;
+  const user = users.find(user => user.username === username);
+
+  if (!user) { 
+    return response.status(400).json({ error: "Usuário não encontrado :/" }); 
+  }
+
+  request.user = user;
+
+  return next();
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request;
+
+  if (user.pro === false && user.todos.length > 3) {
+    return response.json({ message: "Você já possui 4 todos, para registrar mais vire PRO." })
+  }
+
+  return next();
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers;
+  const { id } = request.params;
+  
+
+
+  request.user = user;
+  request.todo = todo;
+  return next();
 }
 
 function findUserById(request, response, next) {
